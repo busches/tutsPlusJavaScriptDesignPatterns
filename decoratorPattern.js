@@ -1,93 +1,105 @@
-function Coffee() {
-
+function Beverage() {
+	this._cost = 0;
 }
 
-Coffee.prototype.cost = function() {
-	return 5;
+Beverage.prototype.cost = function() {
+	return this._cost;
 };
 
-Coffee.small = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+function BeverageDecorator(beverage) {
+	Beverage.call(this);
+	this.beverage = beverage;
+}
 
-	coffeeObj.cost = function() {
-		return cost - 1;
-	};
+BeverageDecorator.prototype = Object.create(Beverage.prototype);
+
+BeverageDecorator.prototype.cost = function() {
+	return this._cost + this.beverage.cost();
 };
 
-Coffee.medium = function(coffeeObj) {};
+function Coffee() {
+	Beverage.call(this);
+	this._cost = 5;
+}
 
-Coffee.large = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Coffee.prototype = Object.create(Beverage.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 1;
-	};
-};
+function Small(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = -1;
+}
 
-Coffee.sugar = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Small.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function Medium(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0;
+}
 
-Coffee.creamer = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Medium.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function Large(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 1;
+}
 
-Coffee.whippedCream = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Large.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function Sugar(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
 
-Coffee.foam = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Sugar.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function Creamer(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
 
-Coffee.chocolate = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+Creamer.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function WhippedCream(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
 
-Coffee.milk = function(coffeeObj) {
-	var cost = coffeeObj.cost();
+WhippedCream.prototype = Object.create(BeverageDecorator.prototype);
 
-	coffeeObj.cost = function() {
-		return cost + 0.15;
-	};
-};
+function Foam(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
 
-Coffee.mocha = function(coffeeObj) {
-	Coffee.milk(coffeeObj);
-	Coffee.foam(coffeeObj);
-	Coffee.chocolate(coffeeObj);
+Foam.prototype = Object.create(BeverageDecorator.prototype);
 
-	var cost = coffeeObj.cost();
+function Chocolate(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
 
-	coffeeObj.cost = function() {
-		return cost;
-	};
-};
+Chocolate.prototype = Object.create(BeverageDecorator.prototype);
+
+function Milk(beverage) {
+	BeverageDecorator.call(this, beverage);
+	this._cost = 0.15;
+}
+
+Milk.prototype = Object.create(BeverageDecorator.prototype);
+
+function Mocha(beverage) {
+	beverage = new Milk(beverage);
+	beverage = new Foam(beverage);
+	beverage = new Chocolate(beverage);
+	BeverageDecorator.call(this, beverage);
+}
+
+Mocha.prototype = Object.create(BeverageDecorator.prototype);
 
 var coffee = new Coffee();
 var mocha = new Coffee();
-Coffee.medium(mocha);
-Coffee.mocha(mocha);
+mocha = new Medium(mocha);
+mocha = new Mocha(mocha);
 
 console.log(coffee.cost());
 console.log(mocha.cost());
